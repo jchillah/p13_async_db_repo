@@ -1,11 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:p13_async_db_repo/src/data/database_repository.dart';
 
-class ScoreboardScreen extends StatelessWidget {
+class ScoreboardScreen extends StatefulWidget {
   final DatabaseRepository databaseRepository;
   const ScoreboardScreen({super.key, required this.databaseRepository});
 
-  Future<int> get futureScore => databaseRepository.getScore();
+  @override
+  _ScoreboardScreenState createState() => _ScoreboardScreenState();
+}
+
+class _ScoreboardScreenState extends State<ScoreboardScreen> {
+  late Future<int> futureScore;
+
+  @override
+  void initState() {
+    super.initState();
+    futureScore = widget.databaseRepository.getScore();
+  }
+
+  void _updateScore() async {
+    int newScore = (await widget.databaseRepository.getScore()) + 100;
+    await widget.databaseRepository.updateScore(newScore);
+    if (mounted) {
+      setState(() {
+        futureScore = widget.databaseRepository.getScore();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +42,11 @@ class ScoreboardScreen extends StatelessWidget {
       body: FutureBuilder<int>(
         future: futureScore,
         builder: (context, snapshot) {
-          // As long as we got no data, show the loading status
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-            // If we lose connection or as long as we aren't connected to a network, show an error
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
-            // We received the data from the database, so we show the score
             return Center(
               child: Text(
                 'Score: ${snapshot.data}',
@@ -34,11 +57,7 @@ class ScoreboardScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          int newScore = (await databaseRepository.getScore()) + 100;
-          await databaseRepository.updateScore(newScore);
-          // Update UI
-        },
+        onPressed: _updateScore,
         child: const Icon(Icons.add),
       ),
     );

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:p13_async_db_repo/src/data/database_repository.dart';
-import 'package:p13_async_db_repo/src/data/mock_database.dart';
 import 'package:p13_async_db_repo/src/features/Screens/scoreboard/presentation/scoreboard_screen.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({super.key, required MockDatabase databaseRepository});
+  final DatabaseRepository databaseRepository;
+
+  const MainScreen({super.key, required this.databaseRepository});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +19,7 @@ class MainScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) {
-                return ScoreboardScreen(
-                    databaseRepository: DatabaseRepository());
+                return ScoreboardScreen(databaseRepository: databaseRepository);
               }),
             );
           },
