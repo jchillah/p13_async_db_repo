@@ -1,5 +1,5 @@
 class MockDatabase {
-  int _score = 100;
+  int _score = 0;
 
   Future<int> getScore() async {
     await Future.delayed(const Duration(seconds: 3));
@@ -7,7 +7,7 @@ class MockDatabase {
   }
 
   Future<void> updateScore(int score) async {
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 2));
     _score = score;
   }
 }
