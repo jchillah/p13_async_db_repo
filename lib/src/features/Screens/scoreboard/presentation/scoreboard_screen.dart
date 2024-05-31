@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:p13_async_db_repo/src/data/database_repository.dart';
 
 class ScoreboardScreen extends StatelessWidget {
-  const ScoreboardScreen({super.key});
+  final DatabaseRepository databaseRepository;
+  const ScoreboardScreen({super.key, required this.databaseRepository});
 
-  // Simulate fetching the score from a database
-  Future<int> fetchScore() async {
-    await Future.delayed(const Duration(seconds: 3)); // Simulate a delay
-    return 100; // Return the score
-  }
+  Future<int> get futureScore => databaseRepository.getScore();
 
   @override
   Widget build(BuildContext context) {
@@ -16,21 +14,16 @@ class ScoreboardScreen extends StatelessWidget {
         title: const Text('Scoreboard'),
       ),
       body: FutureBuilder<int>(
-        future: fetchScore(),
+        future: futureScore,
         builder: (context, snapshot) {
-          // as long we got no Datas show the loading status
+          // As long as we got no data, show the loading status
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-            /*
-           if we lose connection || as long we arent connected to a Network
-          show an error
-          */
+            // If we lose connection or as long as we aren't connected to a network, show an error
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
-            /* we received the data from the database so we show the score
-          i think this Task should give me 100/100 points :p 
-          */
+            // We received the data from the database, so we show the score
             return Center(
               child: Text(
                 'Score: ${snapshot.data}',
@@ -39,6 +32,14 @@ class ScoreboardScreen extends StatelessWidget {
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          int newScore = (await databaseRepository.getScore()) + 100;
+          await databaseRepository.updateScore(newScore);
+          // Update UI
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
