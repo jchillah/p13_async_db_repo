@@ -42,10 +42,13 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       body: FutureBuilder<int>(
         future: futureScore,
         builder: (context, snapshot) {
+          // As long as we got no data, show the loading status
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
+            // If we lose connection or as long as we aren't connected to a network, show an error
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
+            // We received the data from the database, so we show the score
           } else {
             return Center(
               child: Text(
