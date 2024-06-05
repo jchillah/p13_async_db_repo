@@ -6,10 +6,10 @@ class ScoreboardScreen extends StatefulWidget {
   const ScoreboardScreen({super.key, required this.databaseRepository});
 
   @override
-  _ScoreboardScreenState createState() => _ScoreboardScreenState();
+  ScoreboardScreenState createState() => ScoreboardScreenState();
 }
 
-class _ScoreboardScreenState extends State<ScoreboardScreen> {
+class ScoreboardScreenState extends State<ScoreboardScreen> {
   late Future<int> futureScore;
 
   @override

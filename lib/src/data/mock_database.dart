@@ -1,4 +1,6 @@
-class MockDatabase {
+import 'package:p13_async_db_repo/src/data/database_repository.dart';
+
+class MockDatabase implements DatabaseRepository {
   int _score = 0;
 
   Future<int> getScore() async {

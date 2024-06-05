@@ -6,8 +6,7 @@ import 'package:p13_async_db_repo/src/features/Screens/main_screen/presentation/
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final DatabaseRepository databaseRepository =
-      DatabaseRepository(MockDatabase());
+  final DatabaseRepository databaseRepository = MockDatabase();
 
   @override
   Widget build(BuildContext context) {
